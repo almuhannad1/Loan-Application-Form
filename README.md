@@ -7,7 +7,6 @@ It is built using *React.js* library.
 -  Hide the Submit button when you do not complete filling out the important data.
 - Show the error message and build it into a separate component.
 
+URL : 
 
-![UI](image-1.png)
-![Successfully](image-2.png)
-![Error](image-3.png)
+![UI](image.png)

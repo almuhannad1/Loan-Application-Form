@@ -1,12 +1,19 @@
 import { useState } from "react";
 import "./FormStyles.css";
 import Modal from "./Modal";
+import MyComponent from "./MyComponent";
+import { LoanInputContext } from "../contexts/LoanFormInputContext";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 function LoanForm() {
+  const userData = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const initialName = userData.name
   const [formInputs, setFormInputs] = useState({
-    name: "",
+    name: initialName,
     age: "",
     phoneNumber: "",
     isEmployee: false,
@@ -38,12 +45,29 @@ function LoanForm() {
     formInputs.age === "" ||
     formInputs.phoneNumber === "";
 
+  //Functions Handle Inputs.
+  function handleNameInputChange(value) {
+    setFormInputs({ ...formInputs, name: value });
+  }
+
+  function handlePhoneNumberInputChange(value) {
+    setFormInputs({ ...formInputs, phoneNumber: value });
+  }
+
+  function handleAgeInputChange(value) {
+    setFormInputs({ ...formInputs, age: value });
+  }
+  // Functions Handle Inputs //.
+
   return (
     <div
       onClick={handleDivClick}
       className="flex"
       style={{ flexDirection: "column" }}
     >
+      <h1 style={{ color: "white" }}>
+        {userData.name.charAt(0).toUpperCase() + userData.name.slice(1)}
+      </h1>
       <form
         onSubmit={handleFormSubmit}
         className="flex"
@@ -54,34 +78,40 @@ function LoanForm() {
         <hr />
 
         {/* Name */}
-        <label>Name:</label>
-        <input
-          type="text"
-          value={formInputs.name}
-          onChange={(e) =>
-            setFormInputs({ ...formInputs, name: e.target.value })
-          }
-        />
+        <LoanInputContext.Provider
+          value={{
+            inputTitle: "Name",
+            typeOfInput: "text",
+            handleChange: handleNameInputChange,
+            compValue: formInputs.name,
+          }}
+        >
+          <MyComponent />
+        </LoanInputContext.Provider>
 
         {/* Phone Number */}
-        <label>Phone Number:</label>
-        <input
-          type="number"
-          value={formInputs.phoneNumber}
-          onChange={(e) =>
-            setFormInputs({ ...formInputs, phoneNumber: e.target.value })
-          }
-        />
+        <LoanInputContext.Provider
+          value={{
+            inputTitle: "Phone Number",
+            typeOfInput: "number",
+            handleChange: handlePhoneNumberInputChange,
+            compValue: formInputs.phoneNumber,
+          }}
+        >
+          <MyComponent />
+        </LoanInputContext.Provider>
 
         {/* Age */}
-        <label>Age:</label>
-        <input
-          type="number"
-          value={formInputs.age}
-          onChange={(e) =>
-            setFormInputs({ ...formInputs, age: e.target.value })
-          }
-        />
+        <LoanInputContext.Provider
+          value={{
+            inputTitle: "Age",
+            typeOfInput: "number",
+            handleChange: handleAgeInputChange,
+            compValue: formInputs.age,
+          }}
+        >
+          <MyComponent />
+        </LoanInputContext.Provider>
 
         {/* Employee */}
         <label style={{ marginTop: "30px" }}>Are you an employee?</label>
